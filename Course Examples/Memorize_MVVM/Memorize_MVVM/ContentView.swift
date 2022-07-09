@@ -25,6 +25,7 @@ struct ContentView: View {
                 }
                 .padding(.all)
             }
+            .foregroundColor(Color.orange)
             .padding(.all)
         }
     }
@@ -40,8 +41,10 @@ struct CardView: View {
                 shapeCard.fill().foregroundColor(Color.white)
                 shapeCard.stroke(lineWidth: 3.0).foregroundColor(Color.orange)
                 Text(card.content).font(.largeTitle)
+            } else if card.isMatched {
+                shapeCard.opacity(0.0)
             } else {
-                shapeCard.fill().foregroundColor(Color.orange)
+                shapeCard.fill()
             }
         }
     }
@@ -53,6 +56,8 @@ struct ContentView_Previews: PreviewProvider {
         
         ContentView(viewModel: game)
             .preferredColorScheme(.light)
+        ContentView(viewModel: game)
+            .preferredColorScheme(.dark)
     }
 }
 
