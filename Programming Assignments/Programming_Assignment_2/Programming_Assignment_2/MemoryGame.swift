@@ -9,6 +9,8 @@ import Foundation
 
 struct MemoryGame<CardContent> where CardContent: Equatable{
     private(set) var cards: Array<Card>
+    private(set) var title: String
+    private(set) var color: String
     
     private var indexOfTheFaceUpCard: Int?
     
@@ -34,15 +36,32 @@ struct MemoryGame<CardContent> where CardContent: Equatable{
         }
     }
     
-    init(numberOfPairsOfCards: Int, createCardContent: (Int) -> CardContent) {
+    mutating func newGame(numberOfPairsOfCards: Int, totalEmojis: Int, newTitle: String, newColor: String, newCardContent: (Int) -> CardContent) {
         cards = Array<Card>()
-        for pairIndex in 0..<numberOfPairsOfCards {
+        let numberCards = (numberOfPairsOfCards > totalEmojis ? totalEmojis : numberOfPairsOfCards)
+        for pairIndex in 0..<numberCards {
+            let content: CardContent = newCardContent(pairIndex)
+            
+            cards.append(Card(content: content, id: pairIndex * 2))
+            cards.append(Card(content: content, id: (pairIndex * 2) + 1))
+        }
+        cards.shuffle()
+        title = newTitle
+        color = newColor
+    }
+    
+    init(numberOfPairsOfCards: Int, totalEmojis: Int, newTitle: String, newColor: String, createCardContent: (Int) -> CardContent) {
+        cards = Array<Card>()
+        let numberCards = (numberOfPairsOfCards > totalEmojis ? totalEmojis : numberOfPairsOfCards)
+        for pairIndex in 0..<numberCards {
             let content: CardContent = createCardContent(pairIndex)
             
             cards.append(Card(content: content, id: pairIndex * 2))
             cards.append(Card(content: content, id: (pairIndex * 2) + 1))
         }
         cards.shuffle()
+        title = newTitle
+        color = newColor
     }
     
     struct Card: Identifiable {
